@@ -10,6 +10,8 @@
 #include "hooks/CreateWin.h"
 #include "hooks/Direct3D9Create.h"
 
+#include "LibConfig.h"
+
 void installHooks() {
     Hooks::GetCursorPos::applyHooks();
     Hooks::ScreenToClient::applyHooks();
@@ -30,14 +32,6 @@ static void initConsole()
 }
 #endif
 
-DWORD WINAPI mainThread(LPVOID)
-{
-#if PN_DEBUG_ENABLED
-	initConsole();
-#endif
-	return 0;
-}
-
 
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID)
@@ -46,10 +40,19 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID)
 	{
 		DisableThreadLibraryCalls(hModule);
 
+#if PN_DEBUG_ENABLED
+		initConsole();
+#endif
+
+		// Initialize 
+		LibConfig::createDefaultConfig();
+
+		// Set values
+		DxPeggleNights::GVirtualW = LibConfig::getFromConfig(LibConfig::CResolution, LibConfig::CResolution_Width, 800);
+		DxPeggleNights::GVirtualH = LibConfig::getFromConfig(LibConfig::CResolution, LibConfig::CResolution_Height, 600);
+
 		if (MH_Initialize() == MH_OK)
 			installHooks();
-
-		CreateThread(nullptr, 0, mainThread, nullptr, 0, nullptr);
 	}
 	return TRUE;
 }
