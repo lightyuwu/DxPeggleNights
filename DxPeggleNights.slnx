@@ -3,5 +3,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="DxPeggleNights.vcxproj" />
+  <Project Path="DxPeggleNights.vcxproj" Id="23af842c-cfa1-49e1-8f63-9f4b836bcb72" />
 </Solution>
